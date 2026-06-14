@@ -210,11 +210,8 @@ class Database:
     async def delete_giveaway(self, giveaway_id: int):
         """Удаление розыгрыша и всех связанных данных"""
         async with aiosqlite.connect(self.db_path) as db:
-            # Удаляем победителей
             await db.execute("DELETE FROM winners WHERE giveaway_id = ?", (giveaway_id,))
-            # Удаляем участников
             await db.execute("DELETE FROM participants WHERE giveaway_id = ?", (giveaway_id,))
-            # Удаляем сам розыгрыш
             await db.execute("DELETE FROM giveaways WHERE id = ?", (giveaway_id,))
             await db.commit()
     
@@ -258,15 +255,12 @@ class Database:
     async def get_stats(self) -> Dict[str, int]:
         """Получение статистики бота"""
         async with aiosqlite.connect(self.db_path) as db:
-            # Всего пользователей
             cursor = await db.execute("SELECT COUNT(*) FROM users")
             users_count = (await cursor.fetchone())[0]
             
-            # Всего розыгрышей
             cursor = await db.execute("SELECT COUNT(*) FROM giveaways")
             giveaways_count = (await cursor.fetchone())[0]
             
-            # Активных розыгрышей
             cursor = await db.execute("SELECT COUNT(*) FROM giveaways WHERE status = 'active'")
             active_giveaways = (await cursor.fetchone())[0]
             

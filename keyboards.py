@@ -99,7 +99,6 @@ def get_check_subscription_keyboard(channels: list) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     
     for channel in channels:
-        # Убираем @ если есть
         channel_name = channel.lstrip('@')
         builder.row(
             InlineKeyboardButton(
@@ -118,9 +117,8 @@ def get_my_giveaways_keyboard(giveaways: list) -> InlineKeyboardMarkup:
     """Клавиатура со списком розыгрышей пользователя"""
     builder = InlineKeyboardBuilder()
     
-    for giveaway in giveaways[:10]:  # Показываем максимум 10 последних
+    for giveaway in giveaways[:10]:
         status_emoji = "🟢" if giveaway['status'] == 'active' else "🔴"
-        # Обрезаем описание до 30 символов
         description = giveaway['description'][:30] + "..." if len(giveaway['description']) > 30 else giveaway['description']
         builder.row(
             InlineKeyboardButton(
